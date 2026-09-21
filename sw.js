@@ -1,5 +1,20 @@
+const CACHE_NAME = "agenda-v1";
+
+const ARQUIVOS = [
+    "index.html",
+    "app.js",
+    "style.css"
+]
+
 self.addEventListener("install", event => {
     console.log("Service Worker instalado");
+
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                return cache.addAll(ARQUIVOS)
+            })
+    )
 });
 
 self.addEventListener("activate", event => {
@@ -7,15 +22,11 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("fetch", event => {
-    console.log("URL:");
-    console.log(event.request.url);
-
-    console. log("Método:");
-    console.log(event.request.method) ;
-
-    if (event.request.url.endsWith("/teste-sw")) {
-        event. respondWith(new Response("Resposta criada pelo Service Worker!"));
-        return;
-    }
+    event.respondWith(
+        caches.match(event.request)
+            .then(resposta => {
+                return resposta || fetch(event.request);
+            })
+    )
 });
-    
+
