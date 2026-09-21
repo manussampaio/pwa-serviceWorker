@@ -7,6 +7,15 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("fetch", event => {
-    console. log("Requisição:", event.request.url);
+    console.log("URL:");
+    console.log(event.request.url);
+
+    console. log("Método:");
+    console.log(event.request.method) ;
+
+    if (event.request.url.endsWith("/teste-sw")) {
+        event. respondWith(new Response("Resposta criada pelo Service Worker!"));
+        return;
+    }
 });
     
